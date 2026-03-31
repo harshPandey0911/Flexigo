@@ -1,0 +1,13 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Bike body -->
+  <circle cx="60" cy="140" r="35" fill="none" stroke="#333" stroke-width="8"/>
+  <circle cx="160" cy="140" r="35" fill="none" stroke="#333" stroke-width="8"/>
+  <!-- Chain -->
+  <path d="M85 130 Q110 100 135 130" fill="none" stroke="#666" stroke-width="3"/>
+  <!-- Frame -->
+  <path d="M110 70 L60 130 M110 70 L160 130" stroke="#333" stroke-width="6" fill="none"/>
+  <!-- Handle -->
+  <path d="M100 60 L120 50" stroke="#333" stroke-width="5" fill="none"/>
+  <!-- Seat -->
+  <ellipse cx="110" cy="75" rx="12" ry="8" fill="#FCD34D"/>
+</svg>

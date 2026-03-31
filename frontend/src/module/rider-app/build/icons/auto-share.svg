@@ -1,0 +1,14 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Wheels -->
+  <circle cx="140" cy="150" r="30" fill="none" stroke="#333" stroke-width="7"/>
+  <circle cx="60" cy="150" r="30" fill="none" stroke="#333" stroke-width="7"/>
+  <!-- Body -->
+  <path d="M35 85 L45 55 L155 55 L165 85 Z" fill="#FFD700" stroke="#FFD700" stroke-width="2"/>
+  <rect x="30" y="85" width="140" height="65" rx="5" fill="#FFD700" stroke="#333" stroke-width="3"/>
+  <!-- Windows -->
+  <circle cx="65" cy="75" r="12" fill="#87CEEB" stroke="#333" stroke-width="2"/>
+  <circle cx="135" cy="75" r="12" fill="#87CEEB" stroke="#333" stroke-width="2"/>
+  <!-- People icons -->
+  <circle cx="55" cy="115" r="6" fill="#333"/>
+  <circle cx="145" cy="115" r="6" fill="#333"/>
+</svg>

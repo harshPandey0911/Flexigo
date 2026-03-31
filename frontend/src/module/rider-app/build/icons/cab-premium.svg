@@ -1,0 +1,13 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Wheels -->
+  <circle cx="135" cy="150" r="28" fill="none" stroke="#333" stroke-width="7"/>
+  <circle cx="55" cy="150" r="28" fill="none" stroke="#333" stroke-width="7"/>
+  <!-- Body -->
+  <path d="M35 90 L50 60 L150 60 L165 90 Z" fill="#F0F0F0" stroke="#F0F0F0" stroke-width="2"/>
+  <rect x="30" y="90" width="140" height="60" rx="5" fill="#F0F0F0" stroke="#333" stroke-width="3"/>
+  <!-- Cabin -->
+  <rect x="45" y="65" width="40" height="35" fill="#87CEEB" stroke="#333" stroke-width="2"/>
+  <rect x="115" y="65" width="40" height="35" fill="#87CEEB" stroke="#333" stroke-width="2"/>
+  <!-- Premium indicator star -->
+  <polygon points="100,70 105,85 120,85 108,95 113,110 100,100 87,110 92,95 80,85 95,85" fill="#FFD700"/>
+</svg>
