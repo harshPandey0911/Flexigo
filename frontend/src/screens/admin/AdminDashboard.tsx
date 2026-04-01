@@ -321,7 +321,7 @@ export const AdminDashboard: React.FC = () => {
             <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-white/70 hover:bg-white/10 rounded-xl">
               <FiMenu size={24} />
             </button>
-            <h1 className="text-lg font-black text-white flex items-center gap-1"><FiZap className="text-lime-400"/> Admin</h1>
+            <h1 className="text-lg font-black text-white flex items-center gap-1"><FiZap className="text-lime-400"/> Franchise</h1>
           </div>
           <div className="w-8 h-8 rounded-full bg-lime-400 text-black flex items-center justify-center font-black">F</div>
         </div>
