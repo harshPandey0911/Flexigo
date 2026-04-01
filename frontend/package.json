@@ -1,7 +1,7 @@
 {
-  "name": "flexigo-rider-app",
+  "name": "flexigo-platform",
   "version": "1.0.0",
-  "description": "Flexigo Rider Mobile App - React JS",
+  "description": "Flexigo Platform - Unified Rider, Franchise & Admin Management System",
   "private": true,
   "dependencies": {
     "ajv": "^8.18.0",

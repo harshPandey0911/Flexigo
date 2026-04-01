@@ -215,10 +215,10 @@ export const VehicleRentalScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black pb-20 overflow-x-hidden w-full pt-4">
+    <div className="min-h-screen bg-white text-black pb-20 overflow-x-hidden w-full">
       {/* Animated Background Elements */}
       <motion.div
-        className="absolute top-20 left-0 w-96 h-96 bg-lime-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
+        className="absolute top-0 left-0 w-96 h-96 bg-lime-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
         animate={{
           x: [0, 50, 0],
           y: [0, 100, 0],
@@ -230,7 +230,7 @@ export const VehicleRentalScreen: React.FC = () => {
         }}
       />
       <motion.div
-        className="absolute top-20 right-0 w-96 h-96 bg-emerald-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
+        className="absolute top-0 right-0 w-96 h-96 bg-emerald-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
         animate={{
           x: [0, -50, 0],
           y: [0, 100, 0],
@@ -244,7 +244,7 @@ export const VehicleRentalScreen: React.FC = () => {
 
       {/* Header */}
       <motion.div 
-        className="bg-white text-black p-4 md:p-6 relative z-10 shadow-lg mb-4"
+        className="bg-white text-black p-4 md:p-6 relative z-10 shadow-lg"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -325,7 +325,7 @@ export const VehicleRentalScreen: React.FC = () => {
         </div>
       </motion.div>
 
-      <div className="container mx-auto px-4 py-6 md:py-8 relative z-10">
+      <div className="container mx-auto px-4 py-8 relative z-10">
         <div className={`grid gap-8 ${selectedVehicle || cart.length > 0 ? 'lg:grid-cols-3' : 'grid-cols-1'}`}>
           {/* Vehicles Grid */}
           <div className={`${selectedVehicle || cart.length > 0 ? 'lg:col-span-2' : ''}`}>
