@@ -529,14 +529,14 @@ export const AdminDashboard: React.FC = () => {
                           <div className="mb-4 relative z-10">
                             <div className="flex justify-between items-center mb-2">
                               <p className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Battery Level</p>
-                              <p className="text-sm font-black text-white">{vehicle.batteryLevel}%</p>
+                              <p className="text-sm font-black text-white">{(vehicle.batteryLevel ?? 0)}%</p>
                             </div>
                             <div className="w-full bg-white/10 border border-white/10 rounded-full h-2 overflow-hidden">
                               <div className={`h-full rounded-full transition-all duration-300 ${
-                                vehicle.batteryLevel >= 80 ? 'bg-lime-400' :
-                                vehicle.batteryLevel >= 50 ? 'bg-amber-400' :
-                                vehicle.batteryLevel >= 20 ? 'bg-orange-400' : 'bg-red-500'
-                              }`} style={{ width: `${vehicle.batteryLevel}%` }} />
+                                (vehicle.batteryLevel ?? 0) >= 80 ? 'bg-lime-400' :
+                                (vehicle.batteryLevel ?? 0) >= 50 ? 'bg-amber-400' :
+                                (vehicle.batteryLevel ?? 0) >= 20 ? 'bg-orange-400' : 'bg-red-500'
+                              }`} style={{ width: `${(vehicle.batteryLevel ?? 0)}%` }} />
                             </div>
                           </div>
 
@@ -545,7 +545,7 @@ export const AdminDashboard: React.FC = () => {
                             <div className="bg-black/50 border border-white/10 rounded-2xl p-3">
                               <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest mb-1">Range</p>
                               <p className="text-base font-black text-emerald-400 flex items-center gap-1">
-                                <span>≈</span> {vehicle.range} km
+                                <span>≈</span> {(vehicle.range ?? 0)} km
                               </p>
                             </div>
                             <div className="bg-black/50 border border-white/10 rounded-2xl p-3">
@@ -562,7 +562,7 @@ export const AdminDashboard: React.FC = () => {
                             </div>
                             <div className="bg-black/50 border border-white/10 rounded-2xl p-3">
                               <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest mb-1">Charge Port</p>
-                              <p className="text-xs font-black text-white/80">{vehicle.chargePort}</p>
+                              <p className="text-xs font-black text-white/80">{(vehicle.chargePort ?? 'N/A')}</p>
                             </div>
                           </div>
 
