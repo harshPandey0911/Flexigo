@@ -185,40 +185,41 @@ export const FranchiseDashboard: React.FC = () => {
       {/* Add Franchise Modal */}
       {isAddingFranchise && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[70]" onClick={() => setIsAddingFranchise(false)}>
-          <motion.div className="bg-[#111] rounded-[2rem] border border-white/10 p-8 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-            <h2 className="text-2xl font-black text-white mb-6 flex items-center gap-2"><FiBriefcase className="text-lime-400" /> Add New Franchise</h2>
-            <div className="space-y-4 mb-6">
+          <motion.div className="bg-[#111] rounded-[2rem] border border-white/10 p-6 w-full max-w-sm shadow-2xl relative" onClick={e => e.stopPropagation()} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+            <button onClick={() => setIsAddingFranchise(false)} className="absolute top-4 right-4 text-white/60 hover:text-white text-2xl font-bold">✕</button>
+            <h2 className="text-2xl font-black text-white mb-4 flex items-center gap-2"><FiBriefcase className="text-lime-400" /> Add New Franchise</h2>
+            <div className="space-y-3 mb-6">
               <div>
                 <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Franchise Name</label>
-                <input type="text" placeholder="Enter franchise name" value={newFranchiseForm.name} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, name: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+                <input type="text" placeholder="Enter franchise name" value={newFranchiseForm.name} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, name: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all text-sm" />
               </div>
               <div>
                 <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Location</label>
-                <input type="text" placeholder="Enter location" value={newFranchiseForm.location} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, location: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+                <input type="text" placeholder="Enter location" value={newFranchiseForm.location} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, location: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all text-sm" />
               </div>
               <div>
                 <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Manager Name</label>
-                <input type="text" placeholder="Enter manager name" value={newFranchiseForm.managerName} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, managerName: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+                <input type="text" placeholder="Enter manager name" value={newFranchiseForm.managerName} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, managerName: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all text-sm" />
               </div>
               <div>
                 <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Phone Number</label>
-                <input type="tel" placeholder="+91 98765 43210" value={newFranchiseForm.phone} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, phone: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+                <input type="tel" placeholder="+91 98765 43210" value={newFranchiseForm.phone} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, phone: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all text-sm" />
               </div>
               <div>
                 <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Email</label>
-                <input type="email" placeholder="franchise@flexigo.in" value={newFranchiseForm.email} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, email: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+                <input type="email" placeholder="franchise@flexigo.in" value={newFranchiseForm.email} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, email: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all text-sm" />
               </div>
               <div>
                 <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Status</label>
-                <select value={newFranchiseForm.status} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, status: e.target.value as 'active' | 'inactive'})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 transition-all">
+                <select value={newFranchiseForm.status} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, status: e.target.value as 'active' | 'inactive'})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white focus:border-lime-400 transition-all text-sm">
                   <option value="active" className="bg-[#111]">Active</option>
                   <option value="inactive" className="bg-[#111]">Inactive</option>
                 </select>
               </div>
             </div>
-            <div className="flex gap-3">
-              <button onClick={() => setIsAddingFranchise(false)} className="flex-1 bg-white/10 hover:bg-white/20 text-white py-3 rounded-xl font-bold transition-colors border border-white/10">Cancel</button>
-              <button onClick={handleAddFranchise} className="flex-1 bg-lime-400 hover:bg-lime-500 text-black py-3 rounded-xl font-bold transition-colors shadow-[0_0_20px_rgba(163,230,53,0.3)]">Add Franchise</button>
+            <div className="flex gap-2">
+              <button onClick={() => setIsAddingFranchise(false)} className="flex-1 bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg font-bold text-sm transition-colors border border-white/10">Cancel</button>
+              <button onClick={handleAddFranchise} className="flex-1 bg-lime-400 hover:bg-lime-500 text-black py-2 rounded-lg font-bold text-sm transition-colors shadow-[0_0_20px_rgba(163,230,53,0.3)]">Add</button>
             </div>
           </motion.div>
         </div>
