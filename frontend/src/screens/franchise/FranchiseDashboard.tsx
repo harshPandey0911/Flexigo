@@ -185,7 +185,7 @@ export const FranchiseDashboard: React.FC = () => {
       {/* Add Franchise Modal */}
       {isAddingFranchise && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[70]" onClick={() => setIsAddingFranchise(false)}>
-          <motion.div className="bg-[#111] rounded-[2rem] border border-white/10 p-8 w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]" onClick={e => e.stopPropagation()} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+          <motion.div className="bg-[#111] rounded-[2rem] border border-white/10 p-8 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
             <h2 className="text-2xl font-black text-white mb-6 flex items-center gap-2"><FiBriefcase className="text-lime-400" /> Add New Franchise</h2>
             <div className="space-y-4 mb-6">
               <div>
