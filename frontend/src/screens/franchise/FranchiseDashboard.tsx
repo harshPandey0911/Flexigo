@@ -67,7 +67,7 @@ interface Rider {
 }
 
 export const FranchiseDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'franchises' | 'vehicles' | 'riders' | 'payments' | 'map'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'franchises' | 'vehicles' | 'riders' | 'payments' | 'map' | 'rider-fleet'>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
@@ -135,6 +135,7 @@ export const FranchiseDashboard: React.FC = () => {
     { id: 'dashboard', label: 'Dashboard', icon: FiHome },
     { id: 'franchises', label: 'All Franchises', icon: FiBriefcase },
     { id: 'vehicles', label: 'Fleet Management', icon: FiTruck },
+    { id: 'rider-fleet', label: "Rider's Fleet", icon: FiZap },
     { id: 'riders', label: 'Global Riders', icon: FiUsers },
     { id: 'payments', label: 'All Payments', icon: FiCreditCard },
     { id: 'map', label: 'Live Map', icon: FiMap },
@@ -341,6 +342,45 @@ export const FranchiseDashboard: React.FC = () => {
                       </div>
                     ))}
                   </div>
+                )}
+
+                {/* RIDER'S FLEET TAB */}
+                {activeTab === 'rider-fleet' && (
+                  <>
+                    <div className="mb-6">
+                      <h1 className="text-2xl md:text-3xl font-black text-white">Rider's Available Fleet</h1>
+                      <p className="text-sm md:text-base text-white/60 font-semibold mt-1">View all vehicles available for riders to book and rent.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                      {vehicles.map((vehicle) => (
+                        <div key={vehicle.id} onClick={() => setSelectedVehicle(vehicle)} className="bg-black/50 rounded-[2rem] p-5 shadow-sm border-2 border-white/10 hover:border-lime-400/50 transition-all cursor-pointer group">
+                          <div className="h-40 bg-black/30 rounded-2xl flex items-center justify-center mb-4 overflow-hidden relative shadow-sm border border-white/10">
+                            <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                            <span className={`absolute top-2 right-2 px-3 py-1 bg-black/70 shadow-sm rounded-full text-[10px] font-black uppercase tracking-wider ${
+                              vehicle.available > 0 ? 'text-lime-400 bg-lime-400/10' : 'text-red-400 bg-red-400/10'
+                            }`}>
+                              {vehicle.available > 0 ? `✓ ${vehicle.available} Available` : '✕ Booked'}
+                            </span>
+                          </div>
+                          <h3 className="font-black text-lg text-white mb-1">{vehicle.name}</h3>
+                          <div className="flex flex-col gap-2 mt-4 text-xs">
+                            <div className="flex justify-between items-center text-white/60 font-bold p-1">
+                              <span>Type</span><span className="capitalize text-white">{vehicle.type}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-white/60 font-bold p-1">
+                              <span>Location</span><span className="text-white">{vehicle.location}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-white/60 font-bold p-1">
+                              <span>Price/Day</span><span className="text-lime-400 font-black">₹{vehicle.pricePerDay}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-white/60 font-bold p-1">
+                              <span>Rating</span><span className="text-yellow-400">⭐ {vehicle.rating}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 )}
 
                 {/* RIDERS TAB */}
