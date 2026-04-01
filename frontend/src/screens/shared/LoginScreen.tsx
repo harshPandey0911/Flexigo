@@ -172,6 +172,7 @@ export const LoginScreen: React.FC = () => {
                     placeholder="Enter your name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    onFocus={(e) => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all font-medium"
                   />
                 </div>
@@ -187,6 +188,7 @@ export const LoginScreen: React.FC = () => {
                       placeholder="98765 43210"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
+                      onFocus={(e) => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })}
                       className="flex-1 px-4 py-3.5 outline-none bg-transparent text-white placeholder-white/20 font-medium tracking-wider"
                     />
                   </div>
@@ -230,6 +232,7 @@ export const LoginScreen: React.FC = () => {
                       setOtp(newOtp.join(''));
                       if (value && i < 5) otpInputRefs.current[i + 1]?.focus();
                     }}
+                    onFocus={(e) => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })}
                     onKeyDown={(e) => {
                       if (e.key === 'Backspace' && !otp[i] && i > 0) otpInputRefs.current[i - 1]?.focus();
                     }}

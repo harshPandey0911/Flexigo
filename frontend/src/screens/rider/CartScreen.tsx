@@ -246,7 +246,7 @@ export const CartScreen: React.FC = () => {
 
                 <div className="bg-white p-3 md:p-4 rounded-2xl mb-4 md:mb-6 border-2 border-lime-200">
                    <p className="text-xs md:text-sm font-extrabold text-gray-800 mb-2">Simulate Payment Details</p>
-                   <input type="text" placeholder="Enter UPI ID (e.g. user@okicici)" className="w-full px-3 py-2 md:px-4 md:py-2 rounded-lg border-2 border-lime-300 focus:outline-none focus:border-lime-500 mb-1 md:mb-2 font-semibold text-sm md:text-base" defaultValue="flexigo@fastpay" />
+                   <input type="text" placeholder="Enter UPI ID (e.g. user@okicici)" onFocus={(e) => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="w-full px-3 py-2 md:px-4 md:py-2 rounded-lg border-2 border-lime-300 focus:outline-none focus:border-lime-500 mb-1 md:mb-2 font-semibold text-sm md:text-base" defaultValue="flexigo@fastpay" />
                 </div>
 
                 <motion.button
