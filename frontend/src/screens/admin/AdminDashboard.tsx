@@ -68,17 +68,16 @@ export const AdminDashboard: React.FC = () => {
     chargePort: 'Type 2',
   });
   const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const riders: Rider[] = [
+  const [isAddingRider, setIsAddingRider] = useState(false);
+  const [newRiderForm, setNewRiderForm] = useState<Partial<Rider>>({ name: '', phone: '', status: 'active', totalRides: 0 });
+  const [ridersData, setRidersData] = useState<Rider[]>([
     { id: 'R-101', name: 'Alia Bhatt', phone: '9876543210', totalRides: 42, status: 'active', joinedDate: '2025-11-12' },
     { id: 'R-102', name: 'Ranveer Singh', phone: '8765432109', totalRides: 15, status: 'active', joinedDate: '2026-01-05' },
     { id: 'R-103', name: 'Deepika Padukone', phone: '7654321098', totalRides: 128, status: 'active', joinedDate: '2024-05-20' },
     { id: 'R-104', name: 'Shahrukh Khan', phone: '6543210987', totalRides: 5, status: 'inactive', joinedDate: '2026-02-18' },
     { id: 'R-105', name: 'Priyanka Chopra', phone: '5432109876', totalRides: 67, status: 'active', joinedDate: '2025-08-30' },
-  ];
-
-  // Vehicle images sourced from rider app
+  ]);
+  const navigate = useNavigate();
   const bikeImage = 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&h=400&fit=crop';
   const scooterImage = 'https://cdn.bikedekho.com/processedimages/ola-electric/2025-s1-pro/source/2025-s1-pro679ce0d5bd70a.jpg';
   const carImage = 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=400';
@@ -166,6 +165,29 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleAddRider = () => {
+    if (newRiderForm.name && newRiderForm.phone) {
+      const newRider: Rider = {
+        id: `R-${Date.now().toString().slice(-4)}`,
+        name: newRiderForm.name,
+        phone: newRiderForm.phone,
+        totalRides: 0,
+        status: (newRiderForm.status as 'active' | 'inactive') || 'active',
+        joinedDate: new Date().toISOString().split('T')[0],
+      };
+      setRidersData([...ridersData, newRider]);
+      setIsAddingRider(false);
+      setNewRiderForm({ name: '', phone: '', status: 'active', totalRides: 0 });
+    }
+  };
+
+  const handleDeleteRider = (riderId: string) => {
+    if (confirm('Are you sure you want to delete this rider?')) {
+      setRidersData(ridersData.filter(r => r.id !== riderId));
+      setSelectedRider(null);
+    }
+  };
+
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: FiHome },
     { id: 'vehicles', label: 'Vehicles', icon: FiZap },
@@ -181,6 +203,36 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-[#0a0a0a] text-white font-sans overflow-hidden w-full relative">
+      {/* Add Rider Modal */}
+      {isAddingRider && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[70]" onClick={() => setIsAddingRider(false)}>
+          <motion.div className="bg-[#111] rounded-[2rem] border border-white/10 p-8 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+            <h2 className="text-2xl font-black text-white mb-6 flex items-center gap-2"><FiPlus className="text-lime-400" /> Add New Rider</h2>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Full Name</label>
+                <input type="text" placeholder="Enter rider name" value={newRiderForm.name} onChange={(e) => setNewRiderForm({...newRiderForm, name: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Phone Number</label>
+                <input type="tel" placeholder="98765 43210" value={newRiderForm.phone} onChange={(e) => setNewRiderForm({...newRiderForm, phone: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Status</label>
+                <select value={newRiderForm.status} onChange={(e) => setNewRiderForm({...newRiderForm, status: e.target.value as 'active' | 'inactive'})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 transition-all">
+                  <option value="active" className="bg-[#111]">Active</option>
+                  <option value="inactive" className="bg-[#111]">Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => setIsAddingRider(false)} className="flex-1 bg-white/10 hover:bg-white/20 text-white py-3 rounded-xl font-bold transition-colors border border-white/10">Cancel</button>
+              <button onClick={handleAddRider} className="flex-1 bg-lime-400 hover:bg-lime-500 text-black py-3 rounded-xl font-bold transition-colors shadow-[0_0_20px_rgba(163,230,53,0.3)]">Add Rider</button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       {/* Immersive EV Background Glow */}
       <motion.div className="absolute top-0 left-0 w-[500px] h-[500px] bg-lime-400/20 rounded-full mix-blend-screen filter blur-[150px] pointer-events-none" animate={{ x: [0, 50, 0], y: [0, 100, 0] }} transition={{ duration: 10, repeat: Infinity, repeatType: 'loop' }} />
       <motion.div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-500/20 rounded-full mix-blend-screen filter blur-[150px] pointer-events-none" animate={{ x: [0, -50, 0], y: [0, -100, 0] }} transition={{ duration: 15, repeat: Infinity, repeatType: 'loop' }} />
@@ -367,19 +419,29 @@ export const AdminDashboard: React.FC = () => {
                 )}
 
                 {activeTab === 'riders' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                    {riders.map((rider) => (
-                      <div key={rider.id} onClick={() => setSelectedRider(rider)} className="bg-white/5 rounded-[2rem] p-6 shadow-sm border border-white/10 hover:border-lime-400/50 transition-all text-center cursor-pointer backdrop-blur-sm group">
-                        <div className="w-20 h-20 rounded-full mx-auto bg-gradient-to-br from-lime-400 to-emerald-500 text-black flex items-center justify-center text-3xl font-black mb-4 shadow-lg border-2 border-lime-400 group-hover:scale-110 transition-transform">{rider.name.charAt(0)}</div>
-                        <h3 className="font-black text-xl text-white mb-1">{rider.name}</h3>
-                        <p className="text-sm font-bold text-white/50 mb-4">+91 {rider.phone}</p>
-                        <div className="bg-black/30 border border-white/5 rounded-2xl p-4 text-left grid grid-cols-2 gap-y-3">
-                          <div><p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Total Rides</p><p className="font-black text-lime-400 text-lg">{rider.totalRides}</p></div>
-                          <div><p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Status</p><p className={`font-black uppercase tracking-wider text-[10px] py-1 px-2 inline-block rounded-full mt-1 ${rider.status === 'active' ? 'bg-lime-400/20 text-lime-400 border border-lime-400/30' : 'bg-red-500/20 text-red-500 border border-red-500/30'}`}>{rider.status}</p></div>
+                  <>
+                    <div className="mb-6">
+                      <h2 className="text-2xl md:text-3xl font-black text-white mb-1">Manage Riders</h2>
+                      <p className="text-sm md:text-base text-white/60 font-semibold">Add new riders or manage existing ones.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                      {ridersData.map((rider) => (
+                        <div key={rider.id} className="bg-white/5 rounded-[2rem] p-6 shadow-sm border border-white/10 hover:border-lime-400/50 transition-all text-center backdrop-blur-sm group relative">
+                          <div className="w-20 h-20 rounded-full mx-auto bg-gradient-to-br from-lime-400 to-emerald-500 text-black flex items-center justify-center text-3xl font-black mb-4 shadow-lg border-2 border-lime-400 group-hover:scale-110 transition-transform">{rider.name.charAt(0)}</div>
+                          <h3 className="font-black text-xl text-white mb-1">{rider.name}</h3>
+                          <p className="text-sm font-bold text-white/50 mb-4">+91 {rider.phone}</p>
+                          <div className="bg-black/30 border border-white/5 rounded-2xl p-4 text-left grid grid-cols-2 gap-y-3 mb-4">
+                            <div><p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Total Rides</p><p className="font-black text-lime-400 text-lg">{rider.totalRides}</p></div>
+                            <div><p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Status</p><p className={`font-black uppercase tracking-wider text-[10px] py-1 px-2 inline-block rounded-full mt-1 ${rider.status === 'active' ? 'bg-lime-400/20 text-lime-400 border border-lime-400/30' : 'bg-red-500/20 text-red-500 border border-red-500/30'}`}>{rider.status}</p></div>
+                          </div>
+                          <button onClick={() => handleDeleteRider(rider.id)} className="w-full bg-red-500/20 hover:bg-red-500/30 text-red-400 py-2 rounded-lg font-bold text-xs border border-red-500/30 transition-colors flex items-center justify-center gap-2">
+                            <FiTrash2 size={16} /> Delete Rider
+                          </button>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                    <button onClick={() => setIsAddingRider(true)} className="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-lime-400 text-black p-4 rounded-full shadow-[0_0_20px_rgba(163,230,53,0.5)] hover:scale-105 transition-transform z-20"><FiPlus size={24} /></button>
+                  </>
                 )}
 
                 {activeTab === 'map' && (
