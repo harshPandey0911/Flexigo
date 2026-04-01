@@ -18,21 +18,39 @@ function ScrollToTop() {
 
   useEffect(() => {
     const scrollToTop = () => {
-      window.scrollTo(0, 0);
-      document.body.scrollTo && document.body.scrollTo(0, 0);
-      document.documentElement.scrollTo && document.documentElement.scrollTo(0, 0);
+      // Scroll window to top
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      
+      // Scroll document element
+      if (document.documentElement) {
+        document.documentElement.scrollTop = 0;
+        document.documentElement.scrollLeft = 0;
+      }
+      
+      // Scroll body element
+      if (document.body) {
+        document.body.scrollTop = 0;
+        document.body.scrollLeft = 0;
+      }
     };
 
-    // Scroll immediately
+    // Scroll immediately on navigation
     scrollToTop();
     
-    // Also scroll after a short delay to ensure DOM is ready
+    // Also scroll after a short delay to ensure DOM updates are complete
     const timer = setTimeout(() => {
       scrollToTop();
-      requestAnimationFrame(scrollToTop);
-    }, 50);
+    }, 0);
 
-    return () => clearTimeout(timer);
+    // Use requestAnimationFrame for next frame
+    const rafId = requestAnimationFrame(() => {
+      scrollToTop();
+    });
+
+    return () => {
+      clearTimeout(timer);
+      cancelAnimationFrame(rafId);
+    };
   }, [pathname]);
 
   return null;
