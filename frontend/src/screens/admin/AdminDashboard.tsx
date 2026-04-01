@@ -41,6 +41,7 @@ interface Rider {
   totalRides: number;
   status: 'active' | 'inactive';
   joinedDate: string;
+  assignedVehicleId?: string;
 }
 
 export const AdminDashboard: React.FC = () => {
@@ -70,6 +71,7 @@ export const AdminDashboard: React.FC = () => {
   const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
   const [isAddingRider, setIsAddingRider] = useState(false);
   const [newRiderForm, setNewRiderForm] = useState<Partial<Rider>>({ name: '', phone: '', status: 'active', totalRides: 0 });
+  const [selectedVehicleForRider, setSelectedVehicleForRider] = useState<string | null>(null);
   const [ridersData, setRidersData] = useState<Rider[]>([
     { id: 'R-101', name: 'Alia Bhatt', phone: '9876543210', totalRides: 42, status: 'active', joinedDate: '2025-11-12' },
     { id: 'R-102', name: 'Ranveer Singh', phone: '8765432109', totalRides: 15, status: 'active', joinedDate: '2026-01-05' },
@@ -174,10 +176,12 @@ export const AdminDashboard: React.FC = () => {
         totalRides: 0,
         status: (newRiderForm.status as 'active' | 'inactive') || 'active',
         joinedDate: new Date().toISOString().split('T')[0],
+        assignedVehicleId: selectedVehicleForRider || undefined,
       };
       setRidersData([...ridersData, newRider]);
       setIsAddingRider(false);
       setNewRiderForm({ name: '', phone: '', status: 'active', totalRides: 0 });
+      setSelectedVehicleForRider(null);
     }
   };
 
@@ -224,6 +228,27 @@ export const AdminDashboard: React.FC = () => {
                   <option value="inactive" className="bg-[#111]">Inactive</option>
                 </select>
               </div>
+              <div>
+                <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Assign Vehicle (Optional)</label>
+                <select value={selectedVehicleForRider || ''} onChange={(e) => setSelectedVehicleForRider(e.target.value || null)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 transition-all">
+                  <option value="" className="bg-[#111]">-- Select a vehicle --</option>
+                  {vehiclesData.map((vehicle) => (
+                    <option key={vehicle.id} value={vehicle.id} className="bg-[#111]">
+                      {vehicle.name} {vehicle.available > 0 ? '✓ Available' : '✗ Not Available'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {selectedVehicleForRider && vehiclesData.find(v => v.id === selectedVehicleForRider) && (
+                <div className={`p-3 rounded-xl border ${vehiclesData.find(v => v.id === selectedVehicleForRider)!.available > 0 ? 'bg-lime-400/10 border-lime-400/30' : 'bg-red-500/10 border-red-500/30'}`}>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div><p className="text-white/60">Type</p><p className="font-bold text-white capitalize">{vehiclesData.find(v => v.id === selectedVehicleForRider)?.type}</p></div>
+                    <div><p className="text-white/60">Location</p><p className="font-bold text-white">{vehiclesData.find(v => v.id === selectedVehicleForRider)?.location}</p></div>
+                    <div><p className="text-white/60">Available</p><p className={`font-bold ${vehiclesData.find(v => v.id === selectedVehicleForRider)!.available > 0 ? 'text-lime-400' : 'text-red-400'}`}>{vehiclesData.find(v => v.id === selectedVehicleForRider)?.available} / {vehiclesData.find(v => v.id === selectedVehicleForRider)?.total}</p></div>
+                    <div><p className="text-white/60">Price/Day</p><p className="font-bold text-white">₹{vehiclesData.find(v => v.id === selectedVehicleForRider)?.pricePerDay}</p></div>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="flex gap-3">
               <button onClick={() => setIsAddingRider(false)} className="flex-1 bg-white/10 hover:bg-white/20 text-white py-3 rounded-xl font-bold transition-colors border border-white/10">Cancel</button>
@@ -425,7 +450,9 @@ export const AdminDashboard: React.FC = () => {
                       <p className="text-sm md:text-base text-white/60 font-semibold">Add new riders or manage existing ones.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                      {ridersData.map((rider) => (
+                      {ridersData.map((rider) => {
+                        const assignedVehicle = rider.assignedVehicleId ? vehiclesData.find(v => v.id === rider.assignedVehicleId) : null;
+                        return (
                         <div key={rider.id} className="bg-white/5 rounded-[2rem] p-6 shadow-sm border border-white/10 hover:border-lime-400/50 transition-all text-center backdrop-blur-sm group relative">
                           <div className="w-20 h-20 rounded-full mx-auto bg-gradient-to-br from-lime-400 to-emerald-500 text-black flex items-center justify-center text-3xl font-black mb-4 shadow-lg border-2 border-lime-400 group-hover:scale-110 transition-transform">{rider.name.charAt(0)}</div>
                           <h3 className="font-black text-xl text-white mb-1">{rider.name}</h3>
@@ -434,11 +461,22 @@ export const AdminDashboard: React.FC = () => {
                             <div><p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Total Rides</p><p className="font-black text-lime-400 text-lg">{rider.totalRides}</p></div>
                             <div><p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Status</p><p className={`font-black uppercase tracking-wider text-[10px] py-1 px-2 inline-block rounded-full mt-1 ${rider.status === 'active' ? 'bg-lime-400/20 text-lime-400 border border-lime-400/30' : 'bg-red-500/20 text-red-500 border border-red-500/30'}`}>{rider.status}</p></div>
                           </div>
+                          {assignedVehicle && (
+                            <div className={`p-3 rounded-xl mb-3 border text-left text-xs ${assignedVehicle.available > 0 ? 'bg-lime-400/10 border-lime-400/30' : 'bg-red-500/10 border-red-500/30'}`}>
+                              <p className="text-white/60 font-bold mb-2">Assigned Vehicle:</p>
+                              <p className="font-black text-white mb-1">{assignedVehicle.name}</p>
+                              <div className="grid grid-cols-2 gap-1">
+                                <div><p className="text-white/60">Type</p><p className="font-bold text-white capitalize">{assignedVehicle.type}</p></div>
+                                <div><p className="text-white/60">Avail</p><p className={`font-bold ${assignedVehicle.available > 0 ? 'text-lime-400' : 'text-red-400'}`}>{assignedVehicle.available}/{assignedVehicle.total}</p></div>
+                              </div>
+                            </div>
+                          )}
                           <button onClick={() => handleDeleteRider(rider.id)} className="w-full bg-red-500/20 hover:bg-red-500/30 text-red-400 py-2 rounded-lg font-bold text-xs border border-red-500/30 transition-colors flex items-center justify-center gap-2">
                             <FiTrash2 size={16} /> Delete Rider
                           </button>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                     <button onClick={() => setIsAddingRider(true)} className="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-lime-400 text-black p-4 rounded-full shadow-[0_0_20px_rgba(163,230,53,0.5)] hover:scale-105 transition-transform z-20"><FiPlus size={24} /></button>
                   </>
