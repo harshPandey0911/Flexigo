@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiHome, FiTruck, FiUsers, FiCreditCard, FiMap, FiLogOut, FiMenu, FiX, FiCheckCircle, FiClock, FiAlertCircle, FiTrendingUp, FiDollarSign, FiBriefcase, FiPhone, FiMail, FiZap, FiBatteryCharging } from 'react-icons/fi';
+import { FiHome, FiTruck, FiUsers, FiCreditCard, FiMap, FiLogOut, FiMenu, FiX, FiCheckCircle, FiClock, FiAlertCircle, FiTrendingUp, FiDollarSign, FiBriefcase, FiPhone, FiMail, FiZap, FiBatteryCharging, FiPlus } from 'react-icons/fi';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
@@ -67,18 +67,21 @@ interface Rider {
 }
 
 export const FranchiseDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'franchises' | 'vehicles' | 'riders' | 'payments' | 'map' | 'rider-fleet'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'franchises' | 'vehicles' | 'riders' | 'payments' | 'map'>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
-  const navigate = useNavigate();
-
-  const franchises: Franchise[] = [
+  const [isAddingFranchise, setIsAddingFranchise] = useState(false);
+  const [newFranchiseForm, setNewFranchiseForm] = useState<Partial<Franchise>>({ name: '', location: '', managerName: '', phone: '', email: '', status: 'active' });
+  const [franchisesData, setFranchisesData] = useState<Franchise[]>([
     { id: 'F-001', name: 'Delhi Central Hub', location: 'Connaught Place, Delhi', managerName: 'Rahul Verma', phone: '+91 9876543211', email: 'cp@flexigo.in', status: 'active' },
     { id: 'F-002', name: 'Noida City Center', location: 'Sector 32, Noida', managerName: 'Priya Sharma', phone: '+91 9876543212', email: 'noida@flexigo.in', status: 'active' },
     { id: 'F-003', name: 'Gurugram Sector 15', location: 'Sector 15, Gurugram', managerName: 'Amit Singh', phone: '+91 9876543213', email: 'gurugram@flexigo.in', status: 'active' },
     { id: 'F-004', name: 'IGI Airport Station', location: 'Terminal 3, IGI Airport', managerName: 'Sanjay Dutt', phone: '+91 9876543214', email: 'airport@flexigo.in', status: 'inactive' },
-  ];
+  ]);
+  const navigate = useNavigate();
+
+
 
   // Vehicle images sourced from rider app
   const bikeImage = 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&h=400&fit=crop';
@@ -131,11 +134,33 @@ export const FranchiseDashboard: React.FC = () => {
     { date: 'Mar 30', revenue: 4900 },
   ];
 
+  const handleAddFranchise = () => {
+    if (newFranchiseForm.name && newFranchiseForm.location && newFranchiseForm.managerName && newFranchiseForm.phone && newFranchiseForm.email) {
+      const newFranchise: Franchise = {
+        id: `F-${Date.now().toString().slice(-4)}`,
+        name: newFranchiseForm.name,
+        location: newFranchiseForm.location,
+        managerName: newFranchiseForm.managerName,
+        phone: newFranchiseForm.phone,
+        email: newFranchiseForm.email,
+        status: (newFranchiseForm.status as 'active' | 'inactive') || 'active',
+      };
+      setFranchisesData([...franchisesData, newFranchise]);
+      setIsAddingFranchise(false);
+      setNewFranchiseForm({ name: '', location: '', managerName: '', phone: '', email: '', status: 'active' });
+    }
+  };
+
+  const handleDeleteFranchise = (franchiseId: string) => {
+    if (confirm('Are you sure you want to delete this franchise?')) {
+      setFranchisesData(franchisesData.filter(f => f.id !== franchiseId));
+    }
+  };
+
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: FiHome },
     { id: 'franchises', label: 'All Franchises', icon: FiBriefcase },
     { id: 'vehicles', label: 'Fleet Management', icon: FiTruck },
-    { id: 'rider-fleet', label: "Rider's Fleet", icon: FiZap },
     { id: 'riders', label: 'Global Riders', icon: FiUsers },
     { id: 'payments', label: 'All Payments', icon: FiCreditCard },
     { id: 'map', label: 'Live Map', icon: FiMap },
@@ -157,6 +182,47 @@ export const FranchiseDashboard: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-[#0a0a0a] text-white font-sans overflow-hidden w-full relative">
+      {/* Add Franchise Modal */}
+      {isAddingFranchise && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[70]" onClick={() => setIsAddingFranchise(false)}>
+          <motion.div className="bg-[#111] rounded-[2rem] border border-white/10 p-8 w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]" onClick={e => e.stopPropagation()} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+            <h2 className="text-2xl font-black text-white mb-6 flex items-center gap-2"><FiBriefcase className="text-lime-400" /> Add New Franchise</h2>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Franchise Name</label>
+                <input type="text" placeholder="Enter franchise name" value={newFranchiseForm.name} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, name: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Location</label>
+                <input type="text" placeholder="Enter location" value={newFranchiseForm.location} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, location: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Manager Name</label>
+                <input type="text" placeholder="Enter manager name" value={newFranchiseForm.managerName} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, managerName: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Phone Number</label>
+                <input type="tel" placeholder="+91 98765 43210" value={newFranchiseForm.phone} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, phone: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Email</label>
+                <input type="email" placeholder="franchise@flexigo.in" value={newFranchiseForm.email} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, email: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 placeholder-white/20 transition-all" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2 block">Status</label>
+                <select value={newFranchiseForm.status} onChange={(e) => setNewFranchiseForm({...newFranchiseForm, status: e.target.value as 'active' | 'inactive'})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-lime-400 transition-all">
+                  <option value="active" className="bg-[#111]">Active</option>
+                  <option value="inactive" className="bg-[#111]">Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => setIsAddingFranchise(false)} className="flex-1 bg-white/10 hover:bg-white/20 text-white py-3 rounded-xl font-bold transition-colors border border-white/10">Cancel</button>
+              <button onClick={handleAddFranchise} className="flex-1 bg-lime-400 hover:bg-lime-500 text-black py-3 rounded-xl font-bold transition-colors shadow-[0_0_20px_rgba(163,230,53,0.3)]">Add Franchise</button>
+            </div>
+          </motion.div>
+        </div>
+      )}
       <div className={`fixed inset-0 bg-black/50 z-[9998] md:hidden transition-opacity ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setIsSidebarOpen(false)} />
 
       {/* Sidebar - Dark Theme */}
@@ -272,7 +338,7 @@ export const FranchiseDashboard: React.FC = () => {
                       <p className="text-sm md:text-base text-white/60 font-semibold mt-1">View and contact all your partner franchises across regions.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                      {franchises.map((franchise) => (
+                      {franchisesData.map((franchise) => (
                         <div key={franchise.id} className="bg-black/50 rounded-[2rem] p-6 shadow-sm border-2 border-white/10 hover:border-lime-400/50 transition-all flex flex-col h-full">
                           <div className="flex justify-between items-start mb-4">
                             <div className="w-14 h-14 bg-lime-400/10 border border-lime-400/50 text-lime-400 rounded-2xl flex items-center justify-center text-2xl shadow-sm">
@@ -301,16 +367,17 @@ export const FranchiseDashboard: React.FC = () => {
                           </div>
                           
                           <div className="grid grid-cols-2 gap-3 mt-auto pt-2 shrink-0">
-                            <button className="flex items-center justify-center gap-2 bg-gradient-to-r from-lime-400 to-green-500 hover:from-lime-500 hover:to-green-600 text-black py-3 rounded-xl font-extrabold text-sm transition-colors shadow-sm" onClick={() => alert(`Initiating call to ${franchise.managerName}...`)}>
-                              <FiPhone size={16} /> Call
+                            <button className="flex items-center justify-center gap-2 bg-gradient-to-r from-lime-400 to-green-500 hover:from-lime-500 hover:to-green-600 text-black py-2 rounded-xl font-extrabold text-xs transition-colors shadow-sm" onClick={() => alert(`Initiating call to ${franchise.managerName}...`)}>
+                              <FiPhone size={14} /> Call
                             </button>
-                            <button className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white py-3 rounded-xl font-extrabold text-sm transition-colors shadow-sm border border-white/10" onClick={() => alert(`Opening email draft for ${franchise.email}...`)}>
-                              <FiMail size={16} /> Email
+                            <button onClick={() => handleDeleteFranchise(franchise.id)} className="flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 py-2 rounded-xl font-extrabold text-xs border border-red-500/30 transition-colors shadow-sm">
+                              Delete
                             </button>
                           </div>
                         </div>
                       ))}
                     </div>
+                    <button onClick={() => setIsAddingFranchise(true)} className="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-lime-400 text-black p-4 rounded-full shadow-[0_0_20px_rgba(163,230,53,0.5)] hover:scale-105 transition-transform z-20"><FiPlus size={24} /></button>
                   </>
                 )}
 
@@ -342,45 +409,6 @@ export const FranchiseDashboard: React.FC = () => {
                       </div>
                     ))}
                   </div>
-                )}
-
-                {/* RIDER'S FLEET TAB */}
-                {activeTab === 'rider-fleet' && (
-                  <>
-                    <div className="mb-6">
-                      <h1 className="text-2xl md:text-3xl font-black text-white">Rider's Available Fleet</h1>
-                      <p className="text-sm md:text-base text-white/60 font-semibold mt-1">View all vehicles available for riders to book and rent.</p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                      {vehicles.map((vehicle) => (
-                        <div key={vehicle.id} onClick={() => setSelectedVehicle(vehicle)} className="bg-black/50 rounded-[2rem] p-5 shadow-sm border-2 border-white/10 hover:border-lime-400/50 transition-all cursor-pointer group">
-                          <div className="h-40 bg-black/30 rounded-2xl flex items-center justify-center mb-4 overflow-hidden relative shadow-sm border border-white/10">
-                            <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                            <span className={`absolute top-2 right-2 px-3 py-1 bg-black/70 shadow-sm rounded-full text-[10px] font-black uppercase tracking-wider ${
-                              vehicle.available > 0 ? 'text-lime-400 bg-lime-400/10' : 'text-red-400 bg-red-400/10'
-                            }`}>
-                              {vehicle.available > 0 ? `✓ ${vehicle.available} Available` : '✕ Booked'}
-                            </span>
-                          </div>
-                          <h3 className="font-black text-lg text-white mb-1">{vehicle.name}</h3>
-                          <div className="flex flex-col gap-2 mt-4 text-xs">
-                            <div className="flex justify-between items-center text-white/60 font-bold p-1">
-                              <span>Type</span><span className="capitalize text-white">{vehicle.type}</span>
-                            </div>
-                            <div className="flex justify-between items-center text-white/60 font-bold p-1">
-                              <span>Location</span><span className="text-white">{vehicle.location}</span>
-                            </div>
-                            <div className="flex justify-between items-center text-white/60 font-bold p-1">
-                              <span>Price/Day</span><span className="text-lime-400 font-black">₹{vehicle.pricePerDay}</span>
-                            </div>
-                            <div className="flex justify-between items-center text-white/60 font-bold p-1">
-                              <span>Rating</span><span className="text-yellow-400">⭐ {vehicle.rating}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </>
                 )}
 
                 {/* RIDERS TAB */}
