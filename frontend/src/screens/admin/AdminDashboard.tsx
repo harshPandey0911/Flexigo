@@ -323,7 +323,7 @@ export const AdminDashboard: React.FC = () => {
             </button>
             <h1 className="text-lg font-black text-white flex items-center gap-1"><FiZap className="text-lime-400"/> Franchise</h1>
           </div>
-          <div className="w-8 h-8 rounded-full bg-lime-400 text-black flex items-center justify-center font-black">F</div>
+          <div className="w-8 h-8 rounded-full bg-lime-400 text-black flex items-center justify-center font-black">A</div>
         </div>
 
         {/* Scrollable Content */}
@@ -344,7 +344,7 @@ export const AdminDashboard: React.FC = () => {
                   <p className="text-xs text-lime-400 font-medium tracking-wider">NETWORK HUB</p>
                 </div>
                 <div className="w-12 h-12 rounded-full bg-lime-400 text-black flex items-center justify-center font-black text-xl shadow-[0_0_15px_rgba(163,230,53,0.4)]">
-                  F
+                  A
                 </div>
               </div>
             </div>
