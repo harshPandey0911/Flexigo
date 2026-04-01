@@ -188,7 +188,7 @@ export const LoginScreen: React.FC = () => {
                       placeholder="98765 43210"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      onFocus={(e) => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                      onFocus={(e) => e.currentTarget.parentElement?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
                       className="flex-1 px-4 py-3.5 outline-none bg-transparent text-white placeholder-white/20 font-medium tracking-wider"
                     />
                   </div>
