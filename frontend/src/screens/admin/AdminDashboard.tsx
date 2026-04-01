@@ -45,7 +45,7 @@ interface Rider {
 }
 
 export const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'vehicles' | 'riders' | 'map' | 'payments'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'vehicles' | 'riders' | 'vehicle-status' | 'map' | 'payments'>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'bike' | 'scooter' | 'car'>('all');
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
@@ -196,6 +196,7 @@ export const AdminDashboard: React.FC = () => {
     { id: 'dashboard', label: 'Dashboard', icon: FiHome },
     { id: 'vehicles', label: 'Vehicles', icon: FiZap },
     { id: 'riders', label: 'Riders', icon: FiUsers },
+    { id: 'vehicle-status', label: 'Vehicle Status', icon: FiBatteryCharging },
     { id: 'payments', label: 'Payments', icon: FiCreditCard },
     { id: 'map', label: 'Live Map', icon: FiMap },
   ];
@@ -499,6 +500,77 @@ export const AdminDashboard: React.FC = () => {
                         );
                       })}
                     </MapContainer>
+                  </div>
+                )}
+
+                {activeTab === 'vehicle-status' && (
+                  <div className="space-y-4">
+                    <div className="mb-6">
+                      <h2 className="text-2xl md:text-3xl font-black text-white mb-1">Vehicle Status</h2>
+                      <p className="text-sm md:text-base text-white/60 font-semibold">Real-time battery level, range, and availability status for all vehicles.</p>
+                    </div>
+
+                    {/* Vehicle Status Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                      {vehiclesData.map((vehicle) => (
+                        <div key={vehicle.id} className="bg-white/5 border border-white/10 hover:border-lime-400/50 rounded-3xl p-6 shadow-sm transition-all backdrop-blur-sm relative overflow-hidden group">
+                          <div className="absolute -top-4 -right-4 w-32 h-32 bg-white/5 rounded-full filter blur-2xl group-hover:bg-lime-400/10 pointer-events-none transition-colors" />
+                          
+                          {/* Header */}
+                          <div className="flex justify-between items-start mb-4 relative z-10">
+                            <div>
+                              <h3 className="text-lg md:text-xl font-black text-white">{vehicle.name}</h3>
+                              <p className="text-xs md:text-sm text-white/50 font-bold mt-1">{vehicle.location}</p>
+                            </div>
+                            <span className="bg-lime-400/20 border border-lime-400/30 text-lime-400 px-3 py-1 rounded-full text-[10px] font-black uppercase">{vehicle.type}</span>
+                          </div>
+
+                          {/* Battery Level */}
+                          <div className="mb-4 relative z-10">
+                            <div className="flex justify-between items-center mb-2">
+                              <p className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Battery Level</p>
+                              <p className="text-sm font-black text-white">{vehicle.batteryLevel}%</p>
+                            </div>
+                            <div className="w-full bg-white/10 border border-white/10 rounded-full h-2 overflow-hidden">
+                              <div className={`h-full rounded-full transition-all duration-300 ${
+                                vehicle.batteryLevel >= 80 ? 'bg-lime-400' :
+                                vehicle.batteryLevel >= 50 ? 'bg-amber-400' :
+                                vehicle.batteryLevel >= 20 ? 'bg-orange-400' : 'bg-red-500'
+                              }`} style={{ width: `${vehicle.batteryLevel}%` }} />
+                            </div>
+                          </div>
+
+                          {/* Range and Availability */}
+                          <div className="grid grid-cols-2 gap-3 mb-4 relative z-10">
+                            <div className="bg-black/50 border border-white/10 rounded-2xl p-3">
+                              <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest mb-1">Range</p>
+                              <p className="text-base font-black text-emerald-400 flex items-center gap-1">
+                                <span>≈</span> {vehicle.range} km
+                              </p>
+                            </div>
+                            <div className="bg-black/50 border border-white/10 rounded-2xl p-3">
+                              <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest mb-1">Available</p>
+                              <p className="text-base font-black text-blue-400">{vehicle.available}/{vehicle.total}</p>
+                            </div>
+                          </div>
+
+                          {/* Details Grid */}
+                          <div className="grid grid-cols-2 gap-3 relative z-10">
+                            <div className="bg-black/50 border border-white/10 rounded-2xl p-3">
+                              <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest mb-1">Bookings</p>
+                              <p className="text-base font-black text-white">{vehicle.bookings}</p>
+                            </div>
+                            <div className="bg-black/50 border border-white/10 rounded-2xl p-3">
+                              <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest mb-1">Charge Port</p>
+                              <p className="text-xs font-black text-white/80">{vehicle.chargePort}</p>
+                            </div>
+                          </div>
+
+                          {/* Fleet ID */}
+                          <p className="text-[10px] font-bold text-white/30 uppercase mt-4 text-right relative z-10">ID: {vehicle.id}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
 
